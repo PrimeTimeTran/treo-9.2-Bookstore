@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Alert, Card, Col, Container, Row } from "react-bootstrap";
 import { ClipLoader } from "react-spinners";
 
 import { useHistory } from "react-router-dom";
 import PaginationBar from "../components/PaginationBar";
 import SearchForm from "../components/SearchForm";
-import api from "../apiService";
+
+import bookActions from "../redux/actions/books.actions";
 
 const BACKEND_API = process.env.REACT_APP_BACKEND_API;
 
+
+// 1. Read through someone elses code and understand it
+// 2. Refactor to use Redux for state.
+// 3. Structure application in a scalable way.
+// 4. Refactor to use Redux Thunk so that we can sequester our logic related to the composition of an API request out of our component/error handling.
+
 const HomePage = () => {
-  const [books, setBooks] = useState([]);
+  // const [books, setBooks] = useState([]);
   const [pageNum, setPageNum] = useState(1);
   const totalPage = 10;
   const limit = 10;
@@ -35,23 +44,18 @@ const HomePage = () => {
     setQuery(searchInput);
   };
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        let url = `/books?_page=${pageNum}&_limit=${limit}`;
-        if (query) url += `&q=${query}`;
-        const res = await api.get(url);
-        console.log(res);
-        setBooks(res.data);
-        setErrorMessage("");
-      } catch (error) {
-        setErrorMessage(error.message);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, [pageNum, limit, query]);
+    dispatch(bookActions.getBooks(pageNum, limit, query));
+  }, [dispatch, pageNum, limit, query]);
+
+  // const books = useSelector((state) => state.books.books);
+  // const {books} = useSelector((state) => state.books);
+
+  const {
+    books: { books },
+  } = useSelector((state) => state);
 
   return (
     <Container>

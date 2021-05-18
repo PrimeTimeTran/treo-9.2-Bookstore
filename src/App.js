@@ -1,7 +1,9 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import PublicNavbar from "./components/PublicNavbar";
 import HomePage from "./pages/HomePage";
 import ReadingPage from "./pages/ReadingPage";
